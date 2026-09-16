@@ -56,6 +56,7 @@ APIS = [
    "cloudidentity.googleapis.com",
    "accesscontextmanager.googleapis.com",
    "cloudresourcemanager.googleapis.com",
+   "chromepolicy.googleapis.com",
    "beyondcorp.googleapis.com",      # Chrome Enterprise Premium (BeyondCorp) 核心 API
    "script.googleapis.com",          # Google Apps Script 專案連結必要 API
    "sheets.googleapis.com",          # Google Sheets API (若需要後端 API 呼叫)
