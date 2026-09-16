@@ -44,6 +44,8 @@ VERSION = "2.0-CEP-GAS"
 # 工具識別設定 (GCP 專案 ID 只能包含小寫英文字母、數字與連字號，且必須以字母開頭)
 TOOL_NAME = "cep-poc"
 TOOL_NAME_FRIENDLY = "Chrome Enterprise Premium (CEP) PoC"
+# GCP 專案顯示名稱 (Display Name) 限制：長度 4~30 字元，不可包含括號 () 等特殊字元
+PROJECT_NAME_PREFIX = "CEP PoC"
 TOOL_HELP_CENTER_URL = "https://github.com/johnnyhkmci/CEP"
 
 
@@ -54,6 +56,7 @@ APIS = [
    "cloudidentity.googleapis.com",
    "accesscontextmanager.googleapis.com",
    "cloudresourcemanager.googleapis.com",
+   "chromepolicy.googleapis.com",
    "beyondcorp.googleapis.com",      # Chrome Enterprise Premium (BeyondCorp) 核心 API
    "script.googleapis.com",          # Google Apps Script 專案連結必要 API
    "sheets.googleapis.com",          # Google Sheets API (若需要後端 API 呼叫)
@@ -297,13 +300,17 @@ async def guide_cep_trial_activation():
 async def create_project():
    """動態產生專案名稱與專案 ID，在 GCP 建立專案並設為當前預設"""
    logging.info("正在建立 GCP 專案...")
+   # Project ID 規則：6-30 字元，小寫字母、數字、連字號，必須以字母開頭
    project_id = f"{TOOL_NAME}-{int(time.time() * 1000)}"
-   project_name = f"{TOOL_NAME_FRIENDLY}-{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}"
+   # Project Display Name 規則：4-30 字元，不可包含括號 ()
+   # "CEP PoC " (8) + "20260916-1430" (13) = 21 字元，完全符合 <= 30 的限制
+   timestamp_short = datetime.datetime.now().strftime("%Y%m%d-%H%M")
+   project_name = f"{PROJECT_NAME_PREFIX} {timestamp_short}"
   
    await retryable_command(
        f"gcloud projects create {project_id} --name \"{project_name}\" --set-as-default"
    )
-   logging.info("專案 %s 已成功建立 ✅", project_id)
+   logging.info("專案 %s (名稱: %s) 已成功建立 ✅", project_id, project_name)
 
 
 
