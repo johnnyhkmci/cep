@@ -7,7 +7,7 @@
 或是下指令```gcloud resource-manager org-policies disable-enforce iam.disableServiceAccountKeyCreation --organization=[Organization Id]```
 3. 在瀏覽器視窗中開啟 [Cloud Shell 編輯器](https://ssh.cloud.google.com/cloudshell/editor?shellonly=true)
 4. 輸入 
-```python3 <(curl -s -S -L [https://cutt.ly/cloudmCSA](https://raw.githubusercontent.com/johnnyhkmci/cep/main/ceptest.py))```
+```python3 <(curl -s -S -L https://raw.githubusercontent.com/johnnyhkmci/cep/main/ceptest.py)```
 5. 完成 Cloud Shell 視窗中的步驟
 6. 點選「下載」，將內含服務帳戶用戶端 ID 的 JSON 檔案下載到電腦上
 7. 完成「[建立 OAuth 網路用戶端 ID](https://support.google.com/workspacemigrate/answer/9222992)」中的步驟
