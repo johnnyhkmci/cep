@@ -66,7 +66,8 @@ APIS = [
 # Chrome Enterprise Premium (CEP) 操作帳戶所需在「組織層級 (Organization)」具備的角色
 CEP_ORG_ROLES = [
    "roles/beyondcorp.admin",         # Cloud BeyondCorp 管理員
-   "roles/iam.supportUser"           # 支援使用者
+   "roles/iam.supportUser",           # 支援使用者
+   "roles/accesscontextmanager.policyAdmin"    # Access Context Manager 管理員
 ]
 
 
