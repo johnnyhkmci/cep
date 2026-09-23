@@ -237,7 +237,7 @@ async def grant_cep_organization_roles():
        logging.warning("⚠️ 找不到組織 ID，可能當前帳號未綁定組織或無組織檢視權限。")
        print("\n" + "=" * 80)
        print("⚠️  注意：未偵測到組織 ID (Organization ID)")
-       print("請確認您的 Google Cloud 專案是否建立在組織 (如 gojilab.de) 之下。")
+       print("請確認您的 Google Cloud 專案是否建立在組織 (如 masterconcept.ai) 之下。")
        print(f"請至 GCP Console 確認當前帳戶 ({admin_email}) 已取得下列組織角色：")
        for role in CEP_ORG_ROLES:
            print(f"  👉 {role}")
@@ -289,7 +289,7 @@ async def guide_cep_trial_activation():
    print("CEP 60 天免費試用涉及組織合約與條款確認，需至控制台手動點擊開通。")
    print(f"請在瀏覽器中開啟下列標準控制台網址：\n\n👉 {cep_url}\n")
    print("操作說明：")
-   print(" 1. 確認頁面頂部選取的資源為您的【組織】(例如 cep2.gojilab.de)")
+   print(" 1. 確認頁面頂部選取的資源為您的【組織】(例如 masterconcept.ai)")
    print(" 2. 點擊頂部橫幅中的藍色按鈕【申請免費試用】")
    print(" 3. 依提示完成確認即開通 60 天 (最多 5,000 人) 試用額度")
    print("=" * 80 + "\n")
