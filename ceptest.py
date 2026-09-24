@@ -77,7 +77,9 @@ SCOPES = [
    "https://www.googleapis.com/auth/admin.directory.orgunit.readonly",
    "https://www.googleapis.com/auth/spreadsheets",
    "https://www.googleapis.com/auth/cloud-platform",
-   "https://www.googleapis.com/auth/script.external_request"
+   "https://www.googleapis.com/auth/script.external_request",
+   "https://www.googleapis.com/auth/chrome.management.policy",
+   "https://www.googleapis.com/auth/admin.directory.orgunit"
 ]
 
 
