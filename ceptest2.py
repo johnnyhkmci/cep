@@ -269,34 +269,35 @@ async def create_project():
     logging.info("專案 %s (名稱: %s) 已成功建立 ✅", project_id, project_name)
 
 async def select_existing_project():
-    """引導使用者輸入現有 GCP 專案 ID 並進行綁定與存取驗證"""
+    """引導使用者輸入現有 GCP 專案 ID 或編號並進行綁定與存取驗證"""
     while True:
-        existing_id = input("\n👉 請輸入現有的 GCP 專案 ID (Project ID): ").strip()
-        if not existing_id:
+        userInput = input("\n👉 請輸入現有的 GCP 專案 ID 或專案編號: ").strip()
+        if not userInput:
             print("⚠️ 專案 ID 不可為空，請重新輸入。")
             continue
 
-        logging.info("正在驗證並切換至專案: %s ...", existing_id)
-        # 設定預設專案
-        cmd_set = f"gcloud config set project {existing_id}"
-        _, stderr, return_code = await retryable_command(cmd_set, max_num_retries=1, suppress_errors=True)
+        logging.info("正在查詢專案資訊: %s ...", userInput)
+        # 自動取得真實的 Project ID 與 Project Number
+        cmd_desc = f'gcloud projects describe {userInput} --format="value(projectId, projectNumber)"'
+        stdout, stderr, desc_code = await retryable_command(cmd_desc, max_num_retries=1, suppress_errors=True)
 
-        if return_code == 0:
-            # 驗證專案是否存在且目前帳號具有存取權限
-            cmd_desc = f'gcloud projects describe {existing_id} --format="value(projectNumber)"'
-            stdout, stderr, desc_code = await retryable_command(cmd_desc, max_num_retries=1, suppress_errors=True)
-            if desc_code == 0 and stdout:
-                project_number = stdout.decode().strip()
-                logging.info("成功綁定現有專案 %s (專案編號: %s) ✅", existing_id, project_number)
-                print(f"✅ 成功綁定現有專案 [{existing_id}] (專案編號: {project_number})")
-                break
-            else:
-                print(f"\n❌ 無法讀取專案 [{existing_id}]，請確認權限或專案 ID 是否正確。")
-                err_msg = stderr.decode().strip()
-                if err_msg:
-                    print(f"錯誤訊息: {err_msg}")
+        if desc_code == 0 and stdout:
+            output_parts = stdout.decode().strip().split()
+            real_project_id = output_parts[0]
+            project_number = output_parts[1] if len(output_parts) > 1 else output_parts[0]
+
+            # 務必使用 real_project_id 設定 gcloud，避免 iam 指令失敗
+            cmd_set = f"gcloud config set project {real_project_id}"
+            await retryable_command(cmd_set)
+
+            logging.info("成功綁定現有專案 %s (專案編號: %s) ✅", real_project_id, project_number)
+            print(f"✅ 成功綁定現有專案 [{real_project_id}] (專案編號: {project_number})")
+            break
         else:
-            print(f"\n❌ 設定專案 [{existing_id}] 失敗，請確認專案 ID 是否拼寫正確。")
+            print(f"\n❌ 無法讀取專案 [{userInput}]，請確認權限或專案 ID 是否正確。")
+            err_msg = stderr.decode().strip()
+            if err_msg:
+                print(f"錯誤訊息: {err_msg}")
 
         retry = input("❓ 是否重新輸入專案 ID？(Y/n，輸入 'n' 則改為建立全新專案): ").strip().lower()
         if retry == 'n':
